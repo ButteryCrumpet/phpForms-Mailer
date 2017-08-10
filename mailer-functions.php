@@ -1,13 +1,11 @@
 <?php
 
-function validateEmail($data){}
+function register_form() {
 
-function validateName($data){}
+}
 
-function validateFurigana($data){}
-
-function validatePhoneNo($data){}
-
-function sanitize($data){}
+function register_mailer(){
+    
+}
 
 ?>

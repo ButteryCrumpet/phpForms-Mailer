@@ -1,7 +1,7 @@
 
 <form action="mailer.php" method="post">
 Name: <input type="text" name="name" value="Simon"><br>
-Phone: <input type="text" name="phone" value="08055627260"><br>
+Phone: <input type="text" name="phone" value="08013378008"><br>
 E-mail: <input type="text" name="email" value='abc@123.com'><br>
 Send To: 1<input type="radio" name="sendTo" value="email1" checked>2<input type="radio" name="sendTo" value="email2">
 <input type="submit">

@@ -126,5 +126,13 @@ class Form {
     function __construct($fields) {
         $this->fields = $fields;
     }
+
+    function isAllValid(){}
+
+    function allErrors(){}
+
+    function theData(){}
+
+
 }
 ?>
