@@ -1,25 +1,40 @@
-
+isset - abstract - data via url params
 <form action="mailer.php" method="post">
-Name: <input type="text" name="name" value="Simon"><br>
-Phone: <input type="text" name="phone" value="08013378008"><br>
+First Name: <input type="text" name="first-name" value="Simon"> Last Name: <input type="text" name="last-name" value="Leigh"><br>
+Furigana: <input type="text" name="first-furi" value="サイモン"> Last Name: <input type="text" name="last-furi" value="リー"><br>
 E-mail: <input type="text" name="email" value='abc@123.com'><br>
-Send To: 1<input type="radio" name="sendTo" value="email1" checked>2<input type="radio" name="sendTo" value="email2">
+Phone: <input type="text" name="phone" value="08013378008"><br>
+Title: <input type="text" name="title" ><br>
+Content: <textarea name="content" cols="30" rows="10"></textarea><br>
+Inquiry: Booking<input type="radio" name="inquiry" value="booking" checked>Suggestion<input type="radio" name="sendTo" value="suggestion">
 <input type="submit">
 </form>
 
 <?php if ($_SERVER['REQUEST_METHOD'] === 'POST'): ?>
-<?php include_once "mailer-classes.php"; ?>
+<?php include_once "./formLib/form-classes.php"; ?>
 <?php
-    $a = new GenericField('name', true);
-    $b = new PhoneNoField('phone', true); 
-    $c = new EmailField('email', true);
-    $args = array("email1"=>"1@cake.com", "email2"=>"2@cake.com");
-    $d = new KeyValueField('sendTo', true, $args);
+    $first_name = new GenericField('first-name', true);
+    $last_name = new GenericField('last-name', true);
+    $first_furi = new KanaField('first-furi', true);
+    $last_furi = new KanaField('last-furi', true);
+    $email = new EmailField('email', true);
+    $phone = new PhoneNoField('phone');
+    $title = new GenericField('title', true);
+    $content = new GenericField('content', true);
+    $args = array("booking"=>"booking@cake.com", "suggestion"=>"suggestion@cake.com");
+    $mail = new KeyValueField('inquiry', true, $args);
+
+    $fields = array($first_name, $last_name, $first_furi, $last_furi, $email, $phone, $title, $content, $mail);
+    $form = new Form($fields);
+    $form->process();
 ?>
 
-<h1><?php echo $a->theData(); ?><span style="color: red;"><?php echo $a->error() ?></span></h1>
-<h1><?php echo $b->theData(); ?><span style="color: red;"><?php echo $b->error() ?></span></h1>
-<h1><?php echo $c->theData(); ?><span style="color: red;"><?php echo $c->error() ?></span></h1>
-<h1><?php echo $d->theData(); ?><span style="color: red;"><?php echo $d->error() ?></span></h1>
+<?php foreach ($form->fields as $name => $field): ?>
+    <?php if($field->valid) : ?>
+        <h1><?php echo $name . ': ' . $field->value; ?></h1>
+    <?php else: ?>
+        <h1><?php echo $name . ': ' . $field->error; ?>
+    <?php endif; ?>
+<?php endforeach; ?>
 
 <?php endif; ?>
