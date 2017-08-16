@@ -5,22 +5,28 @@
 class Template {
     protected $file;
     protected $values;
+    protected $parsed;
 
     function __construct($template, $values) {
-        $this->file = $template;
+        $this->parsed = $this->parseTemplate($template);
         $this->values = $values;
     }
 
     public function render() {
-        $output = file_get_contents($this->file);
-
+        //abstract to replace,extract,etc functions
         foreach ($this->values as $key => $value) {
             $toReplace = "[@".$key."]";
-            $output = str_replace($toReplace, $value, $output);
+            $output= str_replace($toReplace, $value, $this->parsed);
         }
-
         return $output;
+    }
 
+    protected function parseTemplate($file){
+        ob_start();
+        include $file;
+        $parsed = ob_get_contents();
+        ob_end_clean();
+        return $parsed;
     }
 }
 
