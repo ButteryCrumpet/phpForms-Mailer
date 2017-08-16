@@ -1,7 +1,5 @@
 <?php
 
-namespace formLib;
-
 abstract class Field {
 
     protected $name;
@@ -9,6 +7,7 @@ abstract class Field {
     protected $error;
     protected $valid;
     protected $value;
+    protected $predata;
 
     function __construct($name, $isRequired = false, $options = null) {
         $this->name = $name;
@@ -25,15 +24,16 @@ abstract class Field {
         $data = $this->getRawData();
 
         if (!$this->error && $data) {
-            $data = $this->sanitize($data);
+            $this->predata = $this->sanitize($data);
             $data = $this->validate($data);
             if (!$this->error) {
                 $this->value = $data;
                 $this->valid = true;
             }
+        } elseif (!$this->error) {
+            $this->value = '';
+            $this->valid = true;
         }
-
-        return null;
     }
 
     protected function throwError($error) {
@@ -42,7 +42,6 @@ abstract class Field {
 
     protected function getRawData() {
         if (empty($_POST[$this->name]) && $this->isRequired) {
-            echo 'req error';
             $this->throwError('required');
         } else {
             return $_POST[$this->name];
@@ -136,6 +135,7 @@ class KeyValueField extends Field {
 
 class Form {
 
+    protected $name;
     protected $fields;
     protected $theData;
     protected $theErrors;
@@ -143,7 +143,8 @@ class Form {
     protected $validFields;
     protected $errorFields;
 
-    function __construct($fields, $args = null) {
+    function __construct($name, $fields, $args = null) {
+        $this->name = $name;
         foreach($fields as $field) {
             $this->fields[$field->name] = $field;
         }
@@ -163,6 +164,7 @@ class Form {
             } else {
                 $this->errorFields[$field->name] = $field;
                 $this->theErrors[$field->name] = $field->error;
+                $this->theData[$field->name] = $field->predata; //dangerous?
             }
         }
 
