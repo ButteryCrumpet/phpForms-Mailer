@@ -118,8 +118,8 @@ class KeyValueField extends Field {
 
     protected $key_vals;
 
-    function __construct($name, $isRequired, $KeyValuePairs) {
-        $this->key_vals = $KeyValuePairs;
+    function __construct($name, $isRequired, $keyValuePairs) {
+        $this->key_vals = $keyValuePairs;
         parent::__construct($name, $isRequired);
     }
 

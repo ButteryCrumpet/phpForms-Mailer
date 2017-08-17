@@ -1,11 +1,6 @@
 <?php
 include "./formLib/form-classes.php";
 
-$mail_addresses = array(
-    "booking"=>"b1310321@gl.aiu.ac.jp", 
-    "suggestion"=>"crumpetybumpety@gmail.com"
-    );
-
 $mailer_fields = array( 
     new GenericField('first-name', true),
     new GenericField('last-name', true),

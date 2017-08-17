@@ -1,13 +1,18 @@
 <?php
 include_once "./templator/templator-classes.php";
+include_once "./formLib/auto-form.php";
 
-$values = array(
-    "no-cake" => "cake",
-);
 
-$test = new Template("mailer.php", $values);
-$out = $test->render();
+$test = new Template("mailer.php");
 
-echo $out;
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $form = new AutoForm('autotest', $test);
+    $form->process();
+    $vals = $form->getToReplace();
+    $test->replace($vals);
+    print_r($form->theErrors);
+}
+
+$test->render();
 exit();
 ?>

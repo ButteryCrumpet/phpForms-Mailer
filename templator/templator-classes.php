@@ -1,24 +1,43 @@
 <?php
 
-//ob_start stuff see link
-//https://stackoverflow.com/questions/2061032/php-file-get-contents-with-php-intact
+//to the dom?
 class Template {
     protected $file;
-    protected $values;
+    protected $newOutput;
     protected $parsed;
 
-    function __construct($template, $values) {
-        $this->parsed = $this->parseTemplate($template);
-        $this->values = $values;
+    function __construct($template) {
+        if (!file_exists($template)) {
+            throw new Exception("Template file does not exist");
+        } else {
+            $this->parsed = $this->parseTemplate($template);
+        }
     }
 
-    public function render() {
-        //abstract to replace,extract,etc functions
-        foreach ($this->values as $key => $value) {
-            $toReplace = "[@".$key."]";
-            $output= str_replace($toReplace, $value, $this->parsed);
+    public function render($echo = false) {
+        if (!$newOutput) {
+            if ($echo) {
+                echo $this->parsed;
+            }
+            return $this->parsed;
+        } else {
+            if ($echo) {
+                echo $this->newOutput;
+            }
+            return $this->newOutput;       
         }
-        return $output;
+    }
+
+    public function get($pattern) {
+        $matches;
+        preg_match_all($pattern, $this->parsed, $matches);
+        return $matches[0];
+    }
+    
+    public function replace($values) { 
+        $keys = array_keys($values);
+        $vals = array_values($values);
+        $this->newOutput = str_replace($keys, $vals, $this->parsed);
     }
 
     protected function parseTemplate($file){
