@@ -1,5 +1,8 @@
 <?php
-
+//move validators to a ?static? class for easy extension?
+//register validator -> add to class? euughh how do others do it?
+//needs post code validation
+//!!!!make validators just return true/false!!!!
 abstract class Field {
 
     protected $name;
@@ -9,7 +12,7 @@ abstract class Field {
     protected $value;
     protected $predata;
 
-    function __construct($name, $isRequired = false, $options = null) {
+    function __construct($name, $isRequired = false, $args = null) {
         $this->name = $name;
         $this->isRequired = $isRequired;
     }
@@ -77,7 +80,7 @@ class EmailField extends Field {
 }
 
 class KanaField extends Field {
-    //make these just return true/false
+
     protected function validate($data) {
         $kanaRX = "/^([゠ァアィイゥウェエォオカガキギクグケゲコゴサザシジスズセゼソゾタダチヂッツヅテデトドナニヌネノハバパヒビピフブプヘベペホボポマミムメモャヤュユョヨラリルレロヮワヰヱヲンヴヵヶヷヸヹヺ・ーヽヾヿ]+)$/u";
         $valid = preg_match($kanaRX, $data);

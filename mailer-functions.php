@@ -1,20 +1,8 @@
 <?php
-include "./formLib/form-classes.php";
+include_once "./formLib/form.classes.php";
+include_once "./formLib/form.utils.php";
 
-$mailer_fields = array( 
-    new GenericField('first-name', true),
-    new GenericField('last-name', true),
-    new KanaField('first-furi', true),
-    new KanaField('last-furi', true),
-    new EmailField('email', true),
-    new PhoneNoField('phone'),
-    new GenericField('subject', true),
-    new GenericField('content', true),
-    new KeyValueField('inquiry', true, $mail_addresses),
-    );
-
-$testf = new Form('mailer', $mailer_fields);
-
+//make into class or lib or something
 $errors;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $testf->process();

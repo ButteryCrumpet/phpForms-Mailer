@@ -1,0 +1,14 @@
+form {
+    background-color: lightseagreen;
+    width: 70%;
+    margin: 0 auto;
+}
+
+label {
+   
+}
+
+input {
+    resize: none;
+    margin: 10px;
+}
