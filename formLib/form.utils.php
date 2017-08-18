@@ -1,6 +1,5 @@
 <?php
-include_once "form-classes.php";
-//turn into collections of static utilities for forms
+
 class FormUtils {
 
     public static function serializableFromHTML($element) {
@@ -10,6 +9,7 @@ class FormUtils {
         $field["required"] = $element->hasAttribute("data-required");
         if ($element->hasAttribute("data-valid")) {
             $field["validation"] = $element->getAttribute("data-valid");
+            echo $field["validation"];
         } else {
             $field["validation"] = "generic";
         }
@@ -17,21 +17,19 @@ class FormUtils {
         return $field;
     }
 
-    public static function makefields($serializables){
+    public static function makeFields($serializables){
         $fields = array();
         foreach ($serializables as $unbuiltfield) {
-            $field = self::makefield($unbuiltfield);
+            $field = self::makeField($unbuiltfield);
             $fields[] = $field;
         }
         return $fields;
     }
     //will eventually need rewriting for extensibility
-    public static function makefield($args) {
+    public static function makeField($name, $validation, $required, $args) {
         $fieldClass;
-
-        $name = $args['name'];
-        $required = $args['required'];
-        $type = $args['validation'];
+        $type = $validation;
+        $required = $required;
 
         switch($type) {
             case "generic":
@@ -50,8 +48,15 @@ class FormUtils {
                 $fieldClass = new URLField($name, $required);
                 break;
             case "keyval":
-                $keyvals = $args['keyvals'];
-                $fieldClass = new KeyValueField($name, $required, $keyvals);
+                $keyvals = $args['args'];
+                $fieldClass = new KeyValueField($name, $required);
+                break;
+            case "zip":
+                $fieldClass = new JapanZipField($name, $required);
+                break;
+            default:
+                throw new Exception("Validation type:". $type ."does not exist");
+                return 0;
                 break;
         }
 

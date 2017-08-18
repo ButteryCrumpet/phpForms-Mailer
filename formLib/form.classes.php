@@ -11,10 +11,13 @@ abstract class Field {
     protected $valid;
     protected $value;
     protected $predata;
+    protected $extraOptions;
+    protected $elements;
 
-    function __construct($name, $isRequired = false, $args = null) {
+    function __construct($name, $required ,$args = null) {
         $this->name = $name;
-        $this->isRequired = $isRequired;
+        $this->isRequired = $required;
+        $this->extraOptions = $args;
     }
 
     //turn into getters
@@ -58,6 +61,11 @@ abstract class Field {
         $data = stripslashes($data);
         $data = htmlentities($data, ENT_NOQUOTES, "UTF-8");
         return $data;
+    }
+
+    public function associateElement($element, $type) {
+        $this->elements[$type] = $element;
+        return $this->elements;
     }
 }
 
@@ -105,10 +113,23 @@ class PhoneNoField extends Field {
     }
 }
 
+class JapanZipField extends Field {
+
+    protected function validate($data) {
+        $pattern =  "/^([0-9]){3}-?([0-9]){4}$/";
+        $valid = preg_match($pattern, $data);
+        if ($valid) {
+            return $data;
+        } else {
+            $this->throwError('invalid');
+        }
+    }
+}
+
 class URLField extends Field {
 
     protected function validate($data) {
-        $valid = !preg_match("/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i", $data);
+        $valid = preg_match("/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i", $data);
         if ($valid) {
             return $data;       
         } else { 
@@ -119,17 +140,11 @@ class URLField extends Field {
 
 class KeyValueField extends Field {
 
-    protected $key_vals;
-
-    function __construct($name, $isRequired, $keyValuePairs) {
-        $this->key_vals = $keyValuePairs;
-        parent::__construct($name, $isRequired);
-    }
-
     protected function validate($data) {
-        $valid = array_key_exists($data, $this->key_vals);
+        $keyvals = $this->extraOptons["keyvals"];
+        $valid = array_key_exists($data, $keyvals);
         if ($valid){
-            return $this->key_vals[$data];
+            return $keyvals[$data];
         } else {
             $this->throwError('invalid');
         }
@@ -146,16 +161,22 @@ class Form {
     protected $validFields;
     protected $errorFields;
 
-    function __construct($name, $fields, $args = null) {
+    function __construct($name, $fields = null, $args = null) {
         $this->name = $name;
-        foreach($fields as $field) {
-            $this->fields[$field->name] = $field;
+        if (isset($fields)) {
+            foreach($fields as $field) {
+                $this->addField($field);
+            }
         }
     }
 
     public function __get($name)
     {
         return $this->$name;
+    }
+
+    public function addField($field) {
+        $this->fields[$field->name] = $field;
     }
 
     public function process() {

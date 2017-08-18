@@ -25,7 +25,7 @@ class Template {
         $this->DOM = new domDocument();
         $this->DOM->loadHTML(mb_convert_encoding($this->html, 'HTML-ENTITIES', 'UTF-8'));
         if (!$whitespace) {
-            $dom->preserveWhiteSpace = false;
+            $this->DOM->preserveWhiteSpace = false;
         }
         return $this->DOM;
     }

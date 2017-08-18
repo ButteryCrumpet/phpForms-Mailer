@@ -1,39 +1,38 @@
 <?php
-include_once "./templateLib/template.classes.php";
+
+include_once "./domLib/dom.utils.php";
 include_once "./formLib/form.classes.php";
 include_once "./formLib/form.utils.php";
+include_once "./autoform-functions.php";
 
-//libxml_use_internal_errors(true);
+libxml_use_internal_errors(true);
 
 $config_vars = parse_ini_file('config.ini', true);
+$attr_config = $config_vars["attributes"];
+$em_config = $config_vars["error-message"];
 
-$template = new Template("mailer.php");
-$dom = $template->createDOM();
+$dom = DOMUtils::generateDOMfromFile("./tests/randomForm.html");
+$form_elements = DOMUtils::getElementsByHasAttributes($dom, array($attr_config["ppForm"]));
+$error_elements = DOMUtils::getElementsByHasAttributes($dom, array($em_config["attribute"]));
 
-//selects and textareas also
-$elements = $dom->getElementsByTagName('input');
-$serializable = array();
-
-foreach ($elements as $element) {
-    $field = FormUtils::serializableFromHTML($element);
-
-    if ($field["validation"] == 'keyval') {
-        if(!isset($config_vars[$field['name']])) {
-            throw new Exception("missing config vars for ". $name);
-        } else {
-            $field['keyvars'] = $config_vars[$name];
-        }
+if($_SERVER['REQUEST_METHOD'] == 'GET') {
+    foreach ($error_elements as $element) {
+        DOMUtils::deleteElement($element);
     }
-    $serializable[] = $field;
 }
 
-$fields = FormUtils::makefields($serializable);
-$form = new Form('contact', $fields);
-$form->process();
-//if error addClass(.error) + append sibling containing error
-//error HTML from config?
+//this needs to be cleaned and config table implemented
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $form = buildAutoForm("testForm", $form_elements, $attr_config['validator-type']);
+    $form->process();
 
-print_r($form->theErrors);
+    foreach ($form->fields as $field) {
+        
+    }
+}
+
 echo $dom->saveHTML();
+
+$end_time = microtime(TRUE);
 
 exit();
