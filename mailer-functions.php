@@ -2,7 +2,7 @@
 include_once "./formLib/form.classes.php";
 include_once "./formLib/form.utils.php";
 
-//make into class or lib or something
+//make into class or lib or somethings
 $errors;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $testf->process();
@@ -23,12 +23,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             echo "Could not send";
         }
-    }
-}
-
-if (isset($errors)) {
- foreach ($errors as $field => $error){
-        echo "<h2>". $field ." is ". $error ."</h2>";
     }
 }
 

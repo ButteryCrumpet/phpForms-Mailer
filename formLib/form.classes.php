@@ -1,8 +1,7 @@
 <?php
-//move validators to a ?static? class for easy extension?
-//register validator -> add to class? euughh how do others do it?
-//needs post code validation
+
 //!!!!make validators just return true/false!!!!
+
 abstract class Field {
 
     protected $name;
@@ -66,6 +65,11 @@ abstract class Field {
     public function associateElement($element, $type) {
         $this->elements[$type] = $element;
         return $this->elements;
+    }
+
+    public function addOptions($name, $value) {
+        $this->extraOptions[$name] = $value;
+        return $this->extraOptions;
     }
 }
 
@@ -161,7 +165,7 @@ class Form {
     protected $validFields;
     protected $errorFields;
 
-    function __construct($name, $fields = null, $args = null) {
+    function __construct($name, $fields = null) {
         $this->name = $name;
         if (isset($fields)) {
             foreach($fields as $field) {
