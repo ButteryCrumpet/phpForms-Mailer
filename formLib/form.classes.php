@@ -1,7 +1,5 @@
 <?php
-
 //!!!!make validators just return true/false!!!!
-
 abstract class Field {
 
     protected $name;
@@ -11,9 +9,11 @@ abstract class Field {
     protected $value;
     protected $predata;
     protected $extraOptions;
-    protected $elements;
+    protected $errorElements = array();
+    protected $mainElement;
 
     function __construct($name, $required ,$args = null) {
+        $name = str_replace("[]", "", $name);
         $this->name = $name;
         $this->isRequired = $required;
         $this->extraOptions = $args;
@@ -49,6 +49,13 @@ abstract class Field {
         if (empty($_POST[$this->name]) && $this->isRequired) {
             $this->throwError('required');
         } else {
+            if (is_array($_POST[$this->name])) {
+                $value = "";
+                foreach($_POST[$this->name] as $val) {
+                    $value .= $val." ";
+                }
+                return $value;
+            }
             return $_POST[$this->name];
         }
     }
@@ -62,8 +69,12 @@ abstract class Field {
         return $data;
     }
 
-    public function associateElement($element, $type) {
-        $this->elements[$type] = $element;
+    public function addMainElement($element) {
+        $this->mainElement = $element;
+    }
+
+    public function addErrorElement($element, $type) {
+        $this->errorElements[$type] = $element;
         return $this->elements;
     }
 
@@ -137,19 +148,6 @@ class URLField extends Field {
         if ($valid) {
             return $data;       
         } else { 
-            $this->throwError('invalid');
-        }
-    }
-}
-
-class KeyValueField extends Field {
-
-    protected function validate($data) {
-        $keyvals = $this->extraOptons["keyvals"];
-        $valid = array_key_exists($data, $keyvals);
-        if ($valid){
-            return $keyvals[$data];
-        } else {
             $this->throwError('invalid');
         }
     }

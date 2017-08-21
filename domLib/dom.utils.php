@@ -27,6 +27,18 @@ class DOMUtils {
         return $query;
     }
 
+    public static function getElementsByTags($elements, $tags) {
+        $query = array();
+        foreach ($tags as $tag) {
+            foreach ($elements as $element) {
+                if ($element->tagName == $tag) {
+                    $query[] = $element;
+                }
+            }
+        }
+        return $query;
+    }
+
     public static function filterByAttributeValues($elements, $attributes) {
         $query;
         foreach($elements as $element) {

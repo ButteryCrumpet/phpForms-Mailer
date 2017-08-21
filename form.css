@@ -4,11 +4,15 @@ form {
     margin: 0 auto;
 }
 
-label {
-   
-}
-
 input {
     resize: none;
     margin: 10px;
+}
+
+.hasError {
+    border: 2px solid red;
+}
+
+.em {
+    color: red;
 }

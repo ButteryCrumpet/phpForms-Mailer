@@ -1,9 +1,9 @@
 <option value="" selected="selected">【選択して下さい】</option>
 <optgroup label="北海道・東北地方">
 <option value="北海道">北海道</option>
-<option value="青森県">青森県</option>
+<option value="青森県" >青森県</option>
 <option value="岩手県">岩手県</option>
-<option value="秋田県">秋田県</option>
+<option value="秋田県" >秋田県</option>
 <option value="宮城県">宮城県</option>
 <option value="山形県">山形県</option>
 <option value="福島県">福島県</option>
@@ -12,7 +12,7 @@
 <option value="栃木県">栃木県</option>
 <option value="群馬県">群馬県</option>
 <option value="茨城県">茨城県</option>
-<option value="埼玉県">埼玉県</option>
+<option value="埼玉県" >埼玉県</option>
 <option value="東京都">東京都</option>
 <option value="千葉県">千葉県</option>
 <option value="神奈川県">神奈川県</option>
