@@ -20,7 +20,7 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
     }
 }
 
-//this needs to be cleaned and config table implemented
+//AutoForm should just take name of Form and Config
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $form = new AutoForm("testForm", $form_elements, $config_vars);
     $form->process();
