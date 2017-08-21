@@ -11,6 +11,7 @@ class AutoForm extends Form {
     protected $errorElements;
     protected $config;
     protected $DOM;
+    protected $confirmed = false;
 
     //change to taking parent element and grabbing
     //child with tags/attr defined in config
@@ -130,8 +131,7 @@ class AutoForm extends Form {
                         if ($ch_element->getAttribute("value") == $value) {
                             $ch_element->setAttribute("checked", "checked");
                         }
-                    }
-                    
+                    }             
                 }
                 continue;
             } elseif ($tag == "select") {
@@ -161,15 +161,10 @@ class AutoForm extends Form {
             //this has to move on and redirect back if errors? needs handling page?
             $this->process();
             if (!$this->valid) {
-                $this->handleErrors();
-            } elseif (!$this->confirmed) {
+                $this->handleErrors(); //needs to render submit action button
+            } else {
                 $this->renderConfirmation();
                 $_SESSION["form_data"] = $this->theData;
-                return true;
-            } else {
-                //this needs big rethink - confirmation too
-                //separate scripts, use templating to easily replace
-                //probably just needs sessions to work...
                 return true;
             }
         } elseif ($_SERVER['REQUEST_METHOD'] == 'GET'){
