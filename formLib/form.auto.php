@@ -171,6 +171,8 @@ class AutoForm extends Form {
             $this->process();
             if (!$this->valid) {
                 $this->handleErrors(); //needs to render submit action button
+                echo $this->DOM->saveHTML();
+                return true;
             } else {
                 $_SESSION[$this->name] = $this->theData;
                 if ($this->confirmation_template == "NONE") {
@@ -188,12 +190,13 @@ class AutoForm extends Form {
             foreach ($this->errorElements as $element) {
                 DOMUtils::deleteElement($element);
             }
+            echo $this->DOM->saveHTML();
+            return true;
         } else {
             echo "400: Bad request";
             return null;
         }
-        echo $this->DOM->saveHTML();
-        return true;
+        return false;
     }
 }
 

@@ -37,7 +37,7 @@
         <label>お問い合わせ</label><input data-ppForm type="radio" name="inquiry" data-required value="suggestion"><br>
         <div class="em" data-error="required|inquiry" >Required please enter</div>
         <label>趣味: </label>スポーツ<input data-ppForm type="checkbox" name="newsletter[]" value="sports" checked="checked">
-        本<input data-ppForm type="checkbox" value="books" name="newsletter[]" checked><br>
+        本<input data-required data-ppForm type="checkbox" value="books" name="newsletter[]" checked><br>
     </div>
     <div id="address-form">
         <label>〒:</label><input data-ppForm type="text" name="zip" data-valid="zip" data-required><br>
