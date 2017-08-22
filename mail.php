@@ -1,30 +1,21 @@
 <?php
-include_once "./formLib/form.classes.php";
-include_once "./formLib/form.utils.php";
+session_start();
 
 //make into class or lib or somethings
 $errors;
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $testf->process();
-    $mail_data = $testf->theData;
-    $errors = $testf->theErrors;
 
-    $message = "Name: ". $mail_data['first-name'] ." ". $mail_data['last-name'];
-    $message .= "(". $mail_data['first-furi'] .' '. $mail_data['last-furi'] .")". "\r\n";
-    $message .= "Email: ". $mail_data['email']. "\r\n";
-    $message .= "Phone No.: ". (!isset($mail_data['phone']) ? "Not provided" : $mail_data['phone']). "\r\n";
-    $message .= $mail_data["content"];
+$mail_data = $_SESSION["testForm"];
+$message = "";
 
-    if ($testf->valid) {
-        $sent = send_mail($mail_data['inquiry'], $mail_data['email'], $mail_data['subject'], $message);
-        if ($sent) {
-            echo "Mail Sent";
-            //header("Location: ./confirmation.php");
-        } else {
-            echo "Could not send";
-        }
-    }
+foreach ($mail_data as $name => $data) {
+    $message .= ucfirst($name). ": ". $data ."\r\n<br>";
 }
+//$sent = send_mail($mail_data['inquiry'], $mail_data['email'], $mail_data['subject'], $message);
+echo $message;
+echo '<a href="/" >Return To Form</a>';
+
+session_unset($_SESSION["form-data"]);
+session_destroy();
 
 function send_mail($to, $from, $subject, $message) {
     $wrapped_message = wordwrap($message, 70, "\r\n");

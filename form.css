@@ -4,6 +4,16 @@ form {
     margin: 0 auto;
 }
 
+.confirmation {
+    background-color: lightseagreen;
+    width: 70%;
+    margin: 0 auto;
+}
+
+.line>p {
+    display: inline-block;
+}
+
 input {
     resize: none;
     margin: 10px;

@@ -1,5 +1,3 @@
-<link rel="stylesheet" href="form.css">
-
 
 <form  data-ppFormTag="mailer" action="<?php htmlentities($_SERVER['PHP_SELF']); ?>" method="post">
     <div id="name-form">

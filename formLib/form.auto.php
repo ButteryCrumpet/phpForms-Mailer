@@ -1,25 +1,27 @@
 <?php
 
-session_start();
-
 include_once "./domLib/dom.utils.php";
 include_once "form.classes.php";
 
 class AutoForm extends Form {
 
+    protected $name;
+    protected $action;
     protected $elements;
     protected $errorElements;
     protected $config;
     protected $DOM;
-    protected $confirmed = false;
 
     //change to taking parent element and grabbing
     //child with tags/attr defined in config
     //this allows for multiple instances
-    function __construct($file, $config) {
+    function __construct($name, $file, $action, $config, $confirm_template = "NONE") {
         $this->DOM = DOMUtils::generateDOMfromFile($file);
-        $this->name = $name;
         $this->config = $config;
+        $this->name = $name;
+        $this->action = $_SERVER['DOCUMENT_ROOT']."/".$action;
+        $this->confirmation_template = $_SERVER['DOCUMENT_ROOT']."/".$confirm_template;
+        echo $this->confirmtion_template;
 
         $this->elements = DOMUtils::getElementsByHasAttributes($this->DOM, array($this->config["attributes"]["ppForm"]));
 
@@ -141,7 +143,7 @@ class AutoForm extends Form {
     }
 
     protected function renderConfirmation() {
-        $confirm_dom = DOMUtils::generateDOMfromFile("kakunin.php");
+        $confirm_dom = DOMUtils::generateDOMfromFile($this->confirmation_template);
         $elements = DOMUtils::getElementsByHasAttributes($confirm_dom, array("data-kakunin"));
         foreach ($elements as $element) {
             $name = $element->getAttribute("data-kakunin");
@@ -149,11 +151,18 @@ class AutoForm extends Form {
                 $text = new DOMText($this->theData[$name]);
                 $element->appendChild($text);
             } else {
-                $text = new DOMText("No data");
+                $text = new DOMText("N/A");
                 $element->appendChild($text);
             }
         }
         echo $confirm_dom->saveHTML();
+    }
+
+    protected function doAction() {
+        $act = $this->action;
+        echo "<script>window.location = '". $act ."';</script>";
+        echo '<META HTTP-EQUIV="refresh" content="0;URL='. $act .'">';
+        return $act;
     }
 
     public function render() {
@@ -163,10 +172,18 @@ class AutoForm extends Form {
             if (!$this->valid) {
                 $this->handleErrors(); //needs to render submit action button
             } else {
-                $this->renderConfirmation();
-                $_SESSION["form_data"] = $this->theData;
-                return true;
+                $_SESSION[$this->name] = $this->theData;
+                if ($this->confirmation_template == "NONE") {
+                    $this->doAction();
+                } else {
+                    $this->renderConfirmation();           
+                }
+                
+                return $this->theData;
             }
+            
+            return null;
+
         } elseif ($_SERVER['REQUEST_METHOD'] == 'GET'){
             foreach ($this->errorElements as $element) {
                 DOMUtils::deleteElement($element);
@@ -176,6 +193,7 @@ class AutoForm extends Form {
             return null;
         }
         echo $this->DOM->saveHTML();
+        return true;
     }
 }
 

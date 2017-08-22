@@ -1,9 +1,13 @@
 <div class="confirmation">
     <h3>Name</h3>
-    <p data-kakunin="firstname"></p>
-    <p data-kakunin="lastname"></p>
-    <p data-kakunin="firstfuri"></p>
-    <p data-kakunin="lastfuri"></p>
+    <div class="line">
+        <p data-kakunin="firstname"></p>
+        <p data-kakunin="lastname"></p>
+    </div>
+    <div class="line">
+        <p data-kakunin="firstfuri"></p>
+        <p data-kakunin="lastfuri"></p>
+    </div>
     <h3>e-Mail</h3>
     <p data-kakunin="email"></p>
     <h3>Phone</h3>
@@ -20,3 +24,6 @@
     <p data-kakunin="address"></p>
     <p data-kakunin="house"></p>
 </div>
+<form action="mail.php">
+    <input type="submit" value="Confirm" />
+</form>
