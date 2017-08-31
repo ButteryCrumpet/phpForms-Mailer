@@ -2,9 +2,16 @@
 session_start();
 //make into class so much easier
 //init func
-$config = parse_ini_file("./testForm/config.ini", true);
+//redirect if no formname
+if (!isset($_GET["formName"])){
+    header("Location: /");
+    die();
+}
+$formName = $_GET["formName"]; 
+$config_file = "../".$formName."/config.ini";
+$config = parse_ini_file($config_file, true);
 $config = $config["mail"];
-$mail_data = $_SESSION["testForm"];
+$mail_data = $_SESSION[$formName];
 
 //get data func
 $data = "";
@@ -24,10 +31,11 @@ foreach ($mail_data as $name => $value) {
 //parse func
 
 //add to an array then concat implode() //abstract to method
-$Bcc = ($config["Bcc"] != "none") ? $config["Bcc"]."," : "";
-$Bcc .= ($config["sendConfirmation"] == "Bcc") ? $mail_data[$config["customerMailName"]] : "";
-$Cc = ($config["Bcc"] != "none") ? $mail_data["Bcc"]."," : "";
-$Cc .= ($config["sendConfirmation"] == "Cc") ? $mail_data[$config["customerMailName"]] : "";
+$Bcc = ($config["Bcc"] != "none") ? $config["Bcc"] : "";
+if ($config["sendConfirmation"] == "true") {
+    $Bcc .= ", ".$mail_data[$config["customerMailInputName"]];
+}
+$Cc = ($config["CC"] != "none") ? $mail_data["CC"] : "";
 $to = $config[$mail_data[$config["emailInputName"]]].",";
 $to .= ($config["additionalEmails"]) ? $config["additionalEmails"] : "";
 
@@ -40,12 +48,14 @@ $sent = send_mail($to, $mail_data[$config["customerMailInputName"]], $mail_data[
 if ($sent){
     session_unset($_SESSION["form-data"]);
     session_destroy();
-    header("Location: index.php");
+    header("Location: ". "../".$config["mailSent"]);
+    die();
+} else {
+    header("Location: ". $config["mailFailed"]);
+    die();
 }
 
 function send_mail($to, $from, $subject, $message, $headers) {
     $wrapped_message = wordwrap($message, 70, "\r\n");
     return mail($to, $subject, $wrapped_message, $headers);
 }
-
-?>

@@ -168,8 +168,10 @@ class AutoForm extends Form {
             return "Valid but not redirected";
 
         } elseif ($_SERVER['REQUEST_METHOD'] == 'GET'){
-            foreach ($this->errorElements as $element) {
-                DOMUtils::deleteElement($element);
+            if ($this->config["main"]["JavaScriptErrors"] != "true"){
+                foreach ($this->errorElements as $element) {
+                    DOMUtils::deleteElement($element);
+                }
             }
             echo $this->DOM->saveHTML();
             return true;

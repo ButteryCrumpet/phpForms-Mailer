@@ -19,7 +19,12 @@ function displayAutoForm($name) {
 
 function displayConfirmation() {
     $formName = $_GET["form"];
-    $formData = $_SESSION[$formName];
+    if (isset($_SESSION[$formName])) {
+        $formData = $_SESSION[$formName];
+    } else {
+        header("Location: /");
+        die();
+    }
     $confirm_template = "./".$formName."/confirmation.php";
     $confirm_dom = DOMUtils::generateDOMfromFile($confirm_template);
     $elements = DOMUtils::getElementsByHasAttributes($confirm_dom, array("data-kakunin"));
