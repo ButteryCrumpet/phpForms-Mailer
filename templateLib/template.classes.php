@@ -50,5 +50,3 @@ class Template {
         return $html;
     }
 }
-
-?>

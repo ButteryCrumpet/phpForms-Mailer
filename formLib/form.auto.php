@@ -15,13 +15,11 @@ class AutoForm extends Form {
     //change to taking parent element and grabbing
     //child with tags/attr defined in config
     //this allows for multiple instances
-    function __construct($name, $file, $action, $config, $confirm_template = "NONE") {
+    function __construct($name, $file, $config) {
         $this->DOM = DOMUtils::generateDOMfromFile($file);
         $this->config = $config;
         $this->name = $name;
-        $this->action = $_SERVER['DOCUMENT_ROOT']."/".$action;
-        $this->confirmation_template = $_SERVER['DOCUMENT_ROOT']."/".$confirm_template;
-        echo $this->confirmtion_template;
+        $this->action = $config["main"]["onValidation"];
 
         $this->elements = DOMUtils::getElementsByHasAttributes($this->DOM, array($this->config["attributes"]["ppForm"]));
 
@@ -137,54 +135,37 @@ class AutoForm extends Form {
                 }
                 continue;
             } elseif ($tag == "select") {
+                //actually write this bit
                 continue;
             }
         }
     }
 
-    protected function renderConfirmation() {
-        $confirm_dom = DOMUtils::generateDOMfromFile($this->confirmation_template);
-        $elements = DOMUtils::getElementsByHasAttributes($confirm_dom, array("data-kakunin"));
-        foreach ($elements as $element) {
-            $name = $element->getAttribute("data-kakunin");
-            if (isset($this->theData[$name])) {
-                $text = new DOMText($this->theData[$name]);
-                $element->appendChild($text);
-            } else {
-                $text = new DOMText("N/A");
-                $element->appendChild($text);
-            }
+    public function checkValid() {
+        $this->process();
+        if (!$this->valid) {
+            return false;
+        } else {
+            $_SESSION[$this->name] = $this->theData;
+            return true;
         }
-        echo $confirm_dom->saveHTML();
     }
 
-    protected function doAction() {
+    public function onValidAction() {
         $act = $this->action;
-        echo "<script>window.location = '". $act ."';</script>";
-        echo '<META HTTP-EQUIV="refresh" content="0;URL='. $act .'">';
+        echo "<script>window.location = '". $act ."?form=". $this->name .";</script>";
+        echo '<META HTTP-EQUIV="refresh" content="0;URL='. $act .'?form='. $this->name .'">';
         return $act;
     }
-
+ 
     public function render() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            //this has to move on and redirect back if errors? needs handling page?
-            $this->process();
             if (!$this->valid) {
-                $this->handleErrors(); //needs to render submit action button
+                $this->handleErrors();
                 echo $this->DOM->saveHTML();
                 return true;
-            } else {
-                $_SESSION[$this->name] = $this->theData;
-                if ($this->confirmation_template == "NONE") {
-                    $this->doAction();
-                } else {
-                    $this->renderConfirmation();           
-                }
-                
-                return $this->theData;
             }
-            
-            return null;
+            return "Valid but not redirected";
 
         } elseif ($_SERVER['REQUEST_METHOD'] == 'GET'){
             foreach ($this->errorElements as $element) {
@@ -199,5 +180,3 @@ class AutoForm extends Form {
         return false;
     }
 }
-
-?>

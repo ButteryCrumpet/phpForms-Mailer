@@ -1,7 +1,5 @@
 <?php
 session_start();
-
-//shikkari shite fkng quickly //move onto akiken now, spend like two weeks on this
 //make into class so much easier
 //init func
 $config = parse_ini_file("./testForm/config.ini", true);
@@ -37,15 +35,12 @@ $headers = "From: ". $from ."\r\n"."X-Mailer: PHP/". phpversion();
 $headers .= "CC: ". $Cc ."\r\n";
 $headers .= "Bcc: ". $Bcc ."\r\n";
 
-$sent = send_mail($to, $mail_data[$config["customerMailName"]], $mail_data['subject'], $formated, $headers);
+$sent = send_mail($to, $mail_data[$config["customerMailInputName"]], $mail_data['subject'], $formated, $headers);
 
 if ($sent){
-    echo $message;
-    echo "sent";
     session_unset($_SESSION["form-data"]);
     session_destroy();
-} else {
-    echo "error";
+    header("Location: index.php");
 }
 
 function send_mail($to, $from, $subject, $message, $headers) {
