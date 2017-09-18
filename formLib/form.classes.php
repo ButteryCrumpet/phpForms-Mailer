@@ -1,5 +1,7 @@
 <?php
 //!!!!make validators just return true/false!!!!
+//just make a field class then have validators that just return true/false
+//in static class or something?
 abstract class Field {
 
     protected $name;
