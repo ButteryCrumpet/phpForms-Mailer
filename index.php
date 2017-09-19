@@ -1,7 +1,6 @@
 <?php 
 session_start();
 include_once "./formLib/autoform.php";
-$form = displayAutoForm("testForm");
 ?>
 
 <html>
@@ -12,5 +11,5 @@ $form = displayAutoForm("testForm");
 <body>
     <h1>Test</h1>
     <p>Lets try it oot</p>
-    <?php $form->render() ?>
+    <?php displayAutoForm("testForm"); ?>
 </body>

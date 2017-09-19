@@ -11,7 +11,7 @@ abstract class Field {
     protected $value;
     protected $predata;
     protected $extraOptions;
-    protected $errorElements = array();
+    protected $errorElement;
     protected $mainElement;
 
     function __construct($name, $required ,$args = null) {
@@ -75,8 +75,8 @@ abstract class Field {
         $this->mainElement = $element;
     }
 
-    public function addErrorElement($element, $type) {
-        $this->errorElements[$type] = $element;
+    public function addErrorElement($element) {
+        $this->errorElement = $element;
         return $this->elements;
     }
 

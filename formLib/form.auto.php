@@ -14,7 +14,7 @@ class AutoForm extends Form {
 
     //change to taking parent element and grabbing
     //child with tags/attr defined in config
-    //this allows for multiple instances
+    //this allows for multiple instances???
     function __construct($name, $file, $config) {
         $this->DOM = DOMUtils::generateDOMfromFile($file);
         $this->config = $config;
@@ -59,12 +59,9 @@ class AutoForm extends Form {
         foreach ($elements as $element) {
             $this->errorElements[] = $element;
             $config_vars = $this->config['error-message'];
-            $attr = $element->getAttribute($config_vars['attribute']);
-            $values = explode('|', $attr);
-            $type = $values[0];
-            $name = $values[1];
+            $name = $element->getAttribute($config_vars['attribute']);
             $field = $this->fields[$name];
-            $field->addErrorElement($element, $type);
+            $field->addErrorElement($element);
         }
     }
 
@@ -72,7 +69,7 @@ class AutoForm extends Form {
         if (!$this->valid) {
             $this->addErrorClass();
             if ($hideEMs) {
-                $this->hideErrorMessages();
+                $this->setErrorMessages();
             }
             if ($retainData) {
                 $this->retainValues();
@@ -83,21 +80,28 @@ class AutoForm extends Form {
     }
 
     protected function addErrorClass() {
-        $errorClass = $this->config["attributes"]["error-class"];
+        $errorClass = $this->config['error-message']["error-class"];
         foreach ($this->errorFields as $field) {
-            DOMUtils::addClass($field->mainElement, "hasError");
+            DOMUtils::addClass($field->mainElement, $errorClass);
         }
     }
 
-    protected function hideErrorMessages() {
+    protected function setErrorMessages() {
         foreach ($this->fields as $field) {
-            $errorType = $field->error;
-    
-            foreach ($field->errorElements as $type => $element) {
-                if ($type != $errorType) {
-                    DOMUtils::deleteElement($element);
+            $errorEle = $field->errorElement;
+
+            if ($field->valid && isset($errorEle)) {
+                DOMUtils::deleteElement($errorEle);
+            } elseif (isset($errorEle)) {
+                $errorType = $field->error;
+                if ($errorType == 'required') {
+                    $message = $this->config['error-message']['require-message'];
+                } else {
+                    $message = $this->config['error-message']['invalid-message'];
                 }
-            } 
+                $messageNode = new DOMText($message);
+                $errorEle->appendChild($messageNode);
+            }
         }
     }
 
@@ -116,7 +120,7 @@ class AutoForm extends Form {
                 $field->mainElement->appendChild($content);
                 continue;
             } elseif ($type == "radio") {
-                $val = $field->predata;
+                $val = ($field->valid) ? $field->value : $field->predata;
                 $r_elements = DOMUtils::filterByAttributeValues($this->elements, array("value" => $val));
                 $r_elements[0]->setAttribute("checked", "checked");
                 continue;
@@ -135,7 +139,17 @@ class AutoForm extends Form {
                 }
                 continue;
             } elseif ($tag == "select") {
-                //actually write this bit
+                $value = ($field->valid) ? $field->value : $field->predata;
+                $children = $field->mainElement->childNodes;
+                foreach($children as $child) {
+                    foreach($child->childNodes as $gc) {
+                        if (is_a($gc, 'DOMElement')) {
+                            if ($gc->getAttribute("value") == $value) {
+                                $gc->setAttribute("selected", "selected");
+                            }
+                        }
+                    }
+                }
                 continue;
             }
         }

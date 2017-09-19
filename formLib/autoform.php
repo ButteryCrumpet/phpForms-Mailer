@@ -12,9 +12,9 @@ function displayAutoForm($name) {
     $form = new AutoForm($name, $template, $config);
     if ($form->checkValid()) {
         $form->onValidAction();
+    } else {
+        $form->render();
     }
-
-    return $form;
 }
 
 function displayConfirmation() {

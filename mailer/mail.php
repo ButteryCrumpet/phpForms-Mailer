@@ -1,16 +1,15 @@
 <?php
 session_start();
-//make into class so much easier
-//init func
+//make into class so much easier - no need, just make it functional?
+
 //redirect if no formname
 if (!isset($_GET["formName"])){
     header("Location: /");
     die();
 }
 $formName = $_GET["formName"]; 
-$config_file = "../".$formName."/config.ini";
+$config_file = "./config.ini";
 $config = parse_ini_file($config_file, true);
-$config = $config["mail"];
 $mail_data = $_SESSION[$formName];
 
 //get data func
