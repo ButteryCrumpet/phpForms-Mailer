@@ -1,8 +1,8 @@
 <?php
 
-include_once $_SERVER['DOCUMENT_ROOT']."/domLib/dom.utils.php";
-include_once "form.classes.php";
-include_once "form.auto.php";
+include "dom.utils.php";
+include "form.classes.php";
+include "form.auto.php";
 
 function displayAutoForm($name) {
     $template = "./".$name."/form.php";
@@ -22,8 +22,8 @@ function displayConfirmation() {
     if (isset($_SESSION[$formName])) {
         $formData = $_SESSION[$formName];
     } else {
-        header("Location: /");
-        die();
+        echo "<h2>There was an error processing this request</h2>";
+        return false;
     }
     $confirm_template = "./".$formName."/confirmation.php";
     $confirm_dom = DOMUtils::generateDOMfromFile($confirm_template);
@@ -39,4 +39,5 @@ function displayConfirmation() {
         }
     }
     echo $confirm_dom->saveHTML();
+    return true;
 }

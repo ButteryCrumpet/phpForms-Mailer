@@ -1,6 +1,6 @@
 <?php 
 session_start();
-include_once "./formLib/autoform.php";
+include "./formLib/autoform.php";
 ?>
 
 <html>

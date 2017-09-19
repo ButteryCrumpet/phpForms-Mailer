@@ -1,6 +1,6 @@
 <?php
 
-include_once "./domLib/dom.utils.php";
+include_once "dom.utils.php";
 include_once "form.classes.php";
 
 class AutoForm extends Form {
