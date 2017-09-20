@@ -1,6 +1,8 @@
 <?php
 session_start();
-//make into class so much easier - no need, just make it functional?
+mb_language('ja');
+mb_internal_encoding('UTF-8');
+//make into class so much easier for easy security additions
 
 //redirect if no formname
 if (!isset($_GET["formName"])){
@@ -8,7 +10,7 @@ if (!isset($_GET["formName"])){
     die();
 }
 $formName = $_GET["formName"]; 
-$config_file = "./config.ini";
+$config_file = "config/mail.ini";
 $config = parse_ini_file($config_file, true);
 $mail_data = $_SESSION[$formName];
 
@@ -47,10 +49,12 @@ $sent = send_mail($to, $mail_data[$config["customerMailInputName"]], $mail_data[
 if ($sent){
     session_unset($_SESSION["form-data"]);
     session_destroy();
-    header("Location: ". "../".$config["mailSent"]);
+    //header("Location: ". "../".$config["mailSent"]);
+    echo "Mail Sent";
     die();
 } else {
-    header("Location: ". $config["mailFailed"]);
+    //header("Location: ". $config["mailFailed"]);
+    echo "Mail Not Sent";
     die();
 }
 

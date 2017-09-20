@@ -1,31 +1,18 @@
 <?php
-
-include "dom.utils.php";
-include "form.classes.php";
-include "form.auto.php";
-
-function displayAutoForm($name) {
-    $template = "./".$name."/form.php";
-    $config_file = "./".$name."/config.ini";
-
-    $config = parse_ini_file($config_file, true);
-    $form = new AutoForm($name, $template, $config);
-    if ($form->checkValid()) {
-        $form->onValidAction();
-    } else {
-        $form->render();
-    }
-}
+session_start();
+include '../formLib/dom.utils.php';
 
 function displayConfirmation() {
     $formName = $_GET["form"];
     if (isset($_SESSION[$formName])) {
         $formData = $_SESSION[$formName];
     } else {
+        if (!isset($_SESSION)) echo "Nooooo";
+        print_r($_SESSION);
         echo "<h2>There was an error processing this request</h2>";
         return false;
     }
-    $confirm_template = "./".$formName."/confirmation.php";
+    $confirm_template = "../templates/confirmation.php";
     $confirm_dom = DOMUtils::generateDOMfromFile($confirm_template);
     $elements = DOMUtils::getElementsByHasAttributes($confirm_dom, array("data-kakunin"));
     foreach ($elements as $element) {
@@ -41,3 +28,5 @@ function displayConfirmation() {
     echo $confirm_dom->saveHTML();
     return true;
 }
+
+displayConfirmation();

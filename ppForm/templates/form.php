@@ -1,4 +1,6 @@
-<form  data-ppFormTag="mailer" action="/" method="post">
+<?php include $_SERVER["DOCUMENT_ROOT"].'/test.php' ?>
+<link rel="stylesheet" type="text/css" href="/ppForm/form.css">
+<form  data-ppFormTag="mailer" action="" method="post">
     <div id="name-form">
         <label>お名前:</label>
         <input data-ppForm type="text" name="firstname" data-required value="Simon">

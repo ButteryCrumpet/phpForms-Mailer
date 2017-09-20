@@ -161,6 +161,7 @@ class AutoForm extends Form {
             return false;
         } else {
             $_SESSION[$this->name] = $this->theData;
+            
             return true;
         }
     }
