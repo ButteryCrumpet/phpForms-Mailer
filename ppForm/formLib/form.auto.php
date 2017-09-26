@@ -88,19 +88,22 @@ class AutoForm extends Form {
 
     protected function setErrorMessages() {
         foreach ($this->fields as $field) {
-            $errorEle = $field->errorElement;
-
-            if ($field->valid && isset($errorEle)) {
-                DOMUtils::deleteElement($errorEle);
-            } elseif (isset($errorEle)) {
-                $errorType = $field->error;
-                if ($errorType == 'required') {
-                    $message = $this->config['error-message']['require-message'];
-                } else {
-                    $message = $this->config['error-message']['invalid-message'];
+            if (count($field->errorElements) > 0) {
+                foreach ($field->errorElements as $errorEle) {
+                    if ($field->valid && isset($errorEle)) {
+                        DOMUtils::deleteElement($errorEle);
+                    } elseif (isset($errorEle)) {
+                        $errorType = $field->error;
+                        $fieldName = $field->name;
+                        if ($errorType == 'required') {
+                            $message = $fieldName . $this->config['error-message']['require-message'];
+                        } else {
+                            $message = $fieldName . $this->config['error-message']['invalid-message'];
+                        }
+                        $messageNode = new DOMText($message);
+                        $errorEle->appendChild($messageNode);
+                    }
                 }
-                $messageNode = new DOMText($message);
-                $errorEle->appendChild($messageNode);
             }
         }
     }
@@ -184,6 +187,7 @@ class AutoForm extends Form {
 
         } elseif ($_SERVER['REQUEST_METHOD'] == 'GET'){
             if ($this->config["main"]["JavaScriptErrors"] != "true"){
+                if (count($this->errorElements) > 0)
                 foreach ($this->errorElements as $element) {
                     DOMUtils::deleteElement($element);
                 }

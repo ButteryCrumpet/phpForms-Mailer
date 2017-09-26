@@ -21,4 +21,13 @@ foreach ($mails as $mail) {
 }
 
 ?>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="/ppForm/formJS/toggle.js"></script>
+
 <h2>Test Form template includes <?php echo $cake ?></h2>
+
+<div class="ppTParent" data-pptoggle="test">Parent</div>
+<div class="ppTParent" data-pptoggle="test2">Parent2</div>
+<div class="ppTChild" data-pptoggle="test">Child1</div>
+<div class="ppTChild" data-pptoggle="test">Child2</div>
+<div class="ppTChild" data-pptoggle="test2">P2 Child1</div>

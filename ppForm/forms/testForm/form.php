@@ -1,4 +1,20 @@
 <?php //include $_SERVER["DOCUMENT_ROOT"].'/test.php' ?>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="/ppForm/formJS/toggle.js"></script>
+<div class="em" data-error="firstname" ></div>
+<div class="em" data-error="lastname" ></div>
+<div class="em" data-error="firstfuri" ></div>
+<div class="em" data-error="lastfuri" ></div>
+<div class="em" data-error="email" ></div>
+<div class="em" data-error="phone" ></div>
+<div class="em" data-error="subject" ></div>
+<div class="em" data-error="content" ></div>
+<div class="em" data-error="inquiry" ></div>
+<div class="em" data-error="zip" ></div>
+<div class="em" data-error="prefecture" ></div>
+<div class="em" data-error="city" ></div>
+<div class="em" data-error="address" ></div>
+<div class="em" data-error="house" ></div>
 <link rel="stylesheet" type="text/css" href="/ppForm/form.css">
 <form  data-ppFormTag="mailer" action="" method="post">
     <div id="name-form">
@@ -32,14 +48,16 @@
         <label>お問い合わせ内容:</label><textarea data-ppForm name="content" data-required cols="30" rows="10"></textarea>
         <br>
         <div class="em" data-error="content" ></div>
-        <label>お問い合わせ種類:</label>予約<input data-ppForm type="radio" name="inquiry" data-required value="booking" checked>
-        <label>お問い合わせ</label><input data-ppForm type="radio" name="inquiry" data-required value="suggestion">
+        <label>お問い合わせ種類:</label>予約<input class="ppTParent" data-pptoggle="book" data-ppForm type="radio" name="inquiry" data-required value="booking" checked>
+        <label>お問い合わせ</label><input data-ppForm class="ppTParent" data-pptoggle="ask" type="radio" name="inquiry" data-required value="suggestion">
         <br>
         <div class="em" data-error="inquiry" ></div>
+        <div class="ppTChild" data-pptoggle="book">
         <label>趣味: </label>
         スポーツ<input data-ppForm type="checkbox" name="newsletter[]" value="sports" checked="checked">
         本<input data-required data-ppForm type="checkbox" value="books" name="newsletter[]" checked>
         <br>
+        </div>
     </div>
     <div id="address-form">
         <label>〒:</label><input data-ppForm type="text" name="zip" data-valid="zip" data-required>

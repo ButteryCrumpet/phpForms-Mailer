@@ -11,7 +11,7 @@ abstract class Field {
     protected $value;
     protected $predata;
     protected $extraOptions;
-    protected $errorElement;
+    protected $errorElements;
     protected $mainElement;
 
     function __construct($name, $required ,$args = null) {
@@ -76,13 +76,11 @@ abstract class Field {
     }
 
     public function addErrorElement($element) {
-        $this->errorElement = $element;
-        return $this->elements;
+        $this->errorElements[] = $element;
     }
 
     public function addOptions($name, $value) {
         $this->extraOptions[$name] = $value;
-        return $this->extraOptions;
     }
 }
 
