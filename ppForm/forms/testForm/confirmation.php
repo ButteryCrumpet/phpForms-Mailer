@@ -24,7 +24,6 @@
     <p data-kakunin="address"></p>
     <p data-kakunin="house"></p>
 </div>
-<form action="mailer/mail.php">
-    <input type="text" name="formName" value="form" hidden>
+<form action="mail">
     <input type="submit" value="Confirm" />
 </form>

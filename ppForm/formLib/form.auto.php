@@ -160,16 +160,16 @@ class AutoForm extends Form {
         if (!$this->valid) {
             return false;
         } else {
-            $_SESSION[$this->name] = $this->theData;
-            
+            $_SESSION[$this->name.SECURE_KEY] = $this->theData;        
             return true;
         }
     }
 
     public function onValidAction() {
         $act = $this->action;
-        echo "<script>window.location = '". $act ."?form=". $this->name .";</script>";
-        echo '<META HTTP-EQUIV="refresh" content="0;URL='. $act .'?form='. $this->name .'">';
+        echo "redirecting... if not click here: Insert Link";
+        echo '<script>window.location = "'. $act .'";</script>';
+        echo '<META HTTP-EQUIV="refresh" content="0;URL="'. $act .'">';
         return $act;
     }
  
